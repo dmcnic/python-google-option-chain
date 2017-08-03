@@ -11,11 +11,12 @@ class OptionChain(object):
 
     def __init__(self, q):
         """
-        Usage: 
+        Usage:
         from optionchain import OptionChain
         oc = OptionChain('NASDAQ:AAPL')
-        # oc.calls 
+        # oc.calls
         # oc.puts
+        # OptionChain.to_excel(oc)
         """
 
         params = {
@@ -49,19 +50,20 @@ class OptionChain(object):
         self.puts = puts
 
 
-    def to_excel(self, puts_path='/tmp/puts.xls', calls_path='/tmp/calls.xls'):
+    def to_excel(self, puts_path='tmp/puts.xls', calls_path='tmp/calls.xls'):
         dataframe = DataFrame(data=self.puts)
         dataframe.to_excel(puts_path)
-        print 'Puts saved at %s' % (puts_path)
+        print('Puts saved at {0:s}'.format(puts_path), flush = True)
         dataframe = DataFrame(data=self.calls)
         dataframe.to_excel(calls_path)
-        print 'Calls saved at %s' % (calls_path)
+        print('Calls saved at {0:s}'.format(calls_path), flush = True)
 
 
     def _get_content(self, url, params):
         response = requests.get(url, params=params)
         if response.status_code == 200:
             content_json = response.content
-            data = json_decode(content_json)
+            jsonString = content_json.decode("utf-8")
+            data = json_decode(jsonString)
 
             return data
